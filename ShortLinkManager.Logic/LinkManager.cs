@@ -116,34 +116,7 @@ namespace ShortLinkManager.Logic
             return ro;
         }
 
-        public async Task<HttpStatusCode> HttpGetStatusCode(string Url)
-        {
-            try
-            {
-                var httpclient = new HttpClient();
-                httpclient.Timeout = TimeSpan.FromSeconds(ConfigManager.CacheTimeout);
-                var response = await httpclient.GetAsync(Url, HttpCompletionOption.ResponseHeadersRead);
-
-                string text = null;
-
-                using (var stream = await response.Content.ReadAsStreamAsync())
-                {
-                    var bytes = new byte[10];
-                    var bytesread = stream.Read(bytes, 0, 10);
-                    stream.Close();
-
-                    text = Encoding.UTF8.GetString(bytes);
-
-                    Console.WriteLine(text);
-                }
-
-                return response.StatusCode;
-            }
-            catch (Exception)
-            {
-                return HttpStatusCode.NotFound;
-            }
-        }
+        
         public void AddGuest(string guid)
         {            
             if (!unitOfWork.GuestRepository.Exists(l => l.GuestGuid.ToUpper() == guid.ToUpper()))
